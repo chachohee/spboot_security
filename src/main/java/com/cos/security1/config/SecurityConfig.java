@@ -10,7 +10,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
+@EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
 	@Bean
@@ -31,7 +31,10 @@ public class SecurityConfig {
 			.formLogin()
 			.loginPage("/loginForm")
 			.loginProcessingUrl("/login")
-			.defaultSuccessUrl("/");
+			.defaultSuccessUrl("/")
+			.and()
+			.oauth2Login()
+			.loginPage("/loginForm"); //구글 로그인이 완료된 뒤의 후처리가 필요함
 
 		return http.build();
 	}
