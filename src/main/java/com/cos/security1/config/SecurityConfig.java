@@ -1,5 +1,6 @@
 package com.cos.security1.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -8,10 +9,15 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.cos.security1.config.oauth.PrincipalOauth2UserService;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
+	
+	@Autowired
+	private PrincipalOauth2UserService principalOauth2UserService;
 
 	@Bean
 	public BCryptPasswordEncoder encodePwd() {
@@ -34,8 +40,10 @@ public class SecurityConfig {
 			.defaultSuccessUrl("/")
 			.and()
 			.oauth2Login()
-			.loginPage("/loginForm"); //구글 로그인이 완료된 뒤의 후처리가 필요함
-
+			.loginPage("/loginForm")//구글 로그인이 완료된 뒤의 후처리가 필요함
+			.userInfoEndpoint()
+			.userService(principalOauth2UserService);
+		
 		return http.build();
 	}
 }
