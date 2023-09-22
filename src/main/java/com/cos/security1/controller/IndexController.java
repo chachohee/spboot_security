@@ -3,12 +3,14 @@ package com.cos.security1.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.cos.security1.config.auth.PrincipalDetails;
 import com.cos.security1.model.User;
 import com.cos.security1.repository.UserRepository;
 
@@ -26,8 +28,13 @@ public class IndexController {
 		return "index";
 	}
 	
+	// OAuth 로그인을 해도 PrincipalDetails
+	// 일반 로그인을 해도 PrincipalDetails 
+	// -> 일반 로그인, OAuth 로그인 분기를 나눌 필요가 없어짐.
 	@GetMapping("/user")
-	public String user() {
+	@ResponseBody
+	public String user(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+		System.out.println("principalDetailes: " + principalDetails.getUser());
 		return "user";
 	}
 	@GetMapping("/admin")

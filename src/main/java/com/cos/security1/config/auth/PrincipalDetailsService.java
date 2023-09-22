@@ -18,6 +18,8 @@ public class PrincipalDetailsService implements UserDetailsService {
 	@Autowired
 	private UserRepository userRepository;
 	
+	// 시큐리티 세션(내부 Authentication(내부 UserDetails))
+	// 함수 종료시 @AuthenticationPrincipal 어노테이션이 만들어진다.
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		// 파라미터로 받는 username은 html에서 form태그로 넘어온 파라미터 중 name이 username인 거
@@ -25,7 +27,7 @@ public class PrincipalDetailsService implements UserDetailsService {
 		// 유저 정보 찾기
 		User userEntity = userRepository.findByUsername(username);
 		if (userEntity != null) {
-			return new PrincipalDetails(userEntity);
+			return new PrincipalDetails(userEntity); // 이때, PrincipalDetails가 Authentication 안에 들어감.
 		}
 		return null;
 	}
